@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel-AI | Integrity Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<body>
+ 
+<nav>
+    <div class="logo-area"><div class="logo-sq">S</div><span style="font-weight:bold; letter-spacing:1px;">SENTINEL-AI</span></div>
+    <ul class="nav-links">
+        <li><a href="index.html">Main Dashboard</a></li>
+        <li class="active"><a href="Live-Monitoring.html">Live Monitoring</a></li>
+        <li><a href="Review-Reports.html">Review Reports</a></li>
+        <li><a href="System-Settings.html">System Settings</a></li>
+    </ul>
+</nav>
+ 
+<main>
+    <div class="top-bar">
+        <h1>Real-Time Integrity Stream</h1>
+        <div style="font-weight:600;">Candidate: <span style="color:#08203a;">Kendrick Lamar</span></div>
+    </div>
+ 
+    <div class="integrity-score">
+        <div style="font-size:2.5rem;" id="statusEmoji">🟢</div>
+        <div>
+            <h2 id="statusHeading" style="color:#2e7d32;">System Status: SECURE</h2>
+            <p id="statusSubtext">Scanning for AI-generated patterns and environmental anomalies.</p>
+        </div>
+    </div>
+ 
+    <div class="grid">
+ 
+        <!-- CLIPBOARD + KEYSTROKE DNA -->
+        <div class="card">
+            <h3>✍️ Keystroke DNA</h3>
+            <p class="info-label">Clipboard Status</p>
+            <p class="info-value" id="clipStatus">
+                <span class="status-light green" id="clipLight"></span>No External Injections
+            </p>
+            <p class="info-label">Flight Time Variance</p>
+            <p class="info-value" id="keystrokeVariance">Waiting for input...</p>
+            <p class="info-label">Avg Flight Time</p>
+            <p class="info-value" id="avgFlight">—</p>
+        </div>
+ 
+        <!-- AI TEXT DETECTION -->
+        <div class="card">
+            <h3>✍️ AI Text Detection</h3>
+            <p class="info-label">Last Scan Score</p>
+            <p class="info-value">
+                <span class="status-light green" id="aiTextLight"></span>
+                <span id="aiTextScore">Awaiting text input...</span>
+            </p>
+            <p class="info-label">Status</p>
+            <p class="info-value" id="aiTextStatus">No AI content detected</p>
+        </div>
+ 
+        <!-- TTS / AI VOICE -->
+        <div class="card">
+            <h3>🎙️ Spectral Audio</h3>
+            <p class="info-label">Acoustic Signature</p>
+            <p class="info-value">
+                <span class="status-light green" id="voiceLight"></span>
+                <span id="voiceStatus">Requesting mic access...</span>
+            </p>
+            <p class="info-label">Pitch Variance</p>
+            <p class="info-value" id="voiceVariance">—</p>
+            <p class="info-label">AI Voice Filter</p>
+            <p class="info-value" id="ttsStatus">No TTS/Siri Frequencies</p>
+        </div>
+ 
+        <!-- EYE TRACKING (UI only — no JS engine yet) -->
+        <div class="card">
+            <h3>👁️ Eye Tracking</h3>
+            <p class="info-label">Gaze Deviation</p>
+            <p class="info-value"><span class="status-light green"></span>Inside Exam Zone</p>
+            <p class="info-label">Saccadic Analysis</p>
+            <p class="info-value">Natural Movement Detected</p>
+        </div>
+ 
+    </div>
+ 
+    <div class="activity-feed" id="feed">
+        <div class="feed-item"><span class="timestamp">[SYSTEM]</span> Sentinel-AI Integrity Core initialized...</div>
+    </div>
+</main>
+ 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="sentinel-logic.js"></script>
+ 
+<!-- Bridge: keep UI cards in sync with sentinel-logic.js engine outputs -->
+<script>
+  // Override updateDashboardMetric to also update card status lights
+ 
+  const _originalUpdate = window.updateDashboardMetric;
+ 
+  window.updateDashboardMetric = function(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+ 
+    // Sync AI text card
+    if (id === 'aiTextScore') {
+      const score = parseFloat(value);
+      const light  = document.getElementById('aiTextLight');
+      const status = document.getElementById('aiTextStatus');
+      if (!isNaN(score)) {
+        if (score >= 72) {
+          if (light)  { light.className = 'status-light red'; }
+          if (status) status.textContent = '⚠️ AI content flagged';
+          setOverallStatus('warning');
+        } else {
+          if (light)  { light.className = 'status-light green'; }
+          if (status) status.textContent = 'No AI content detected';
+        }
+      }
+    }
+ 
+    // Sync voice card
+    if (id === 'voiceVariance') {
+      const v     = parseFloat(value);
+      const light = document.getElementById('voiceLight');
+      const stat  = document.getElementById('ttsStatus');
+      if (!isNaN(v)) {
+        if (v < 5.0) {
+          if (light) light.className = 'status-light red';
+          if (stat)  stat.textContent = '⚠️ TTS signature detected';
+          setOverallStatus('warning');
+        } else {
+          if (light) light.className = 'status-light green';
+          if (stat)  stat.textContent = 'No TTS/Siri Frequencies';
+        }
+      }
+    }
+ 
+    // Sync keystroke card
+    if (id === 'keystrokeVariance') {
+      const v = parseFloat(value);
+      if (!isNaN(v) && v < 180) setOverallStatus('warning');
+    }
+  };
+ 
+  // Intercept reportIncident to update clipboard card
+  const _originalReport = window.reportIncident;
+  window.reportIncident = async function(opts) {
+    // Clipboard flag
+    if (opts.data_type === 'clipboard') {
+      const light  = document.getElementById('clipLight');
+      const status = document.getElementById('clipStatus');
+      if (light)  light.className = 'status-light red';
+      if (status) status.innerHTML = '<span class="status-light red"></span>Injection Blocked';
+      setOverallStatus('warning');
+      // Reset after 5s
+      setTimeout(() => {
+        if (light)  light.className = 'status-light green';
+        if (status) status.innerHTML = '<span class="status-light green"></span>No External Injections';
+      }, 5000);
+    }
+    // Voice flag
+    if (opts.data_type === 'tts_voice') {
+      const light = document.getElementById('voiceLight');
+      if (light) light.className = 'status-light red';
+      setOverallStatus('alert');
+    }
+    return _originalReport ? _originalReport(opts) : null;
+  };
+ 
+  function setOverallStatus(level) {
+    const emoji   = document.getElementById('statusEmoji');
+    const heading = document.getElementById('statusHeading');
+    const sub     = document.getElementById('statusSubtext');
+    if (level === 'warning') {
+      if (emoji)   emoji.textContent      = '🟡';
+      if (heading) { heading.textContent  = 'System Status: CAUTION'; heading.style.color = '#b45309'; }
+      if (sub)     sub.textContent        = 'Anomaly detected — reviewing sensor signals.';
+    } else if (level === 'alert') {
+      if (emoji)   emoji.textContent      = '🔴';
+      if (heading) { heading.textContent  = 'System Status: ALERT'; heading.style.color = '#b91c1c'; }
+      if (sub)     sub.textContent        = 'Integrity violation detected — immediate review required.';
+    }
+  }
+ 
+  // Auto-start monitoring when page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof startExam === 'function') startExam();
+  });
+</script>
+ 
+</body>

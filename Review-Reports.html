@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel-AI | Review Reports</title>
+
+    <style>
+        /* ---------- BASE RESET ---------- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        /* ---------- SIDEBAR NAV ---------- */
+        nav {
+            width: 260px;
+            background: #08203a;
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .logo-sq {
+            width: 35px;
+            height: 35px;
+            background: #ffb400;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #08203a;
+            font-weight: bold;
+            margin-bottom: 40px;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 8px;
+            border-radius: 8px;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 15px;
+            color: #ccc;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-links .active a {
+            background: #ffb400;
+            color: #08203a;
+            font-weight: bold;
+        }
+
+        /* ---------- MAIN CONTENT ---------- */
+        main {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-view {
+            background: #08203a;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-view:hover {
+            opacity: 0.9;
+        }
+
+        /* ---------- SUMMARY CARD ---------- */
+        .report-summary {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-top: 6px solid #e74c3c;
+        }
+
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 8px solid #e74c3c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ---------- TABLE ---------- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        th {
+            background: #08203a;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .status-pill {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .pill-red { background: #ffd7d7; color: #e74c3c; }
+        .pill-yellow { background: #fff4d7; color: #f1c40f; }
+
+        /* ---------- MODAL SYSTEM ---------- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0; top: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            max-width: 550px; 
+            width: 90%; 
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-btn {
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        #visualEvidence {
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+        }
+
+        .hamburger-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #08203a;
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        @media (max-width: 768px) {
+    nav {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+       @media (max-width: 768px) {
+    nav {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+            nav.open {
+                left: 0;
+            }
+            main {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .header {
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .report-summary {
+                flex-direction: column;
+                text-align: center;
+            }
+            .score-circle {
+                margin-top: 20px;
+            }
+            table {
+                font-size: 0.8rem;
+                overflow-x: auto;
+                display: block;
+                white-space: nowrap;
+            }
+            th, td {
+                padding: 8px;
+                min-width: 100px;
+            }
+            .modal-content {
+                width: 95%;
+                max-width: none;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo-sq">S</div>
+    <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="Live-Monitoring.html">Live Monitoring</a></li>
+        <li class="active"><a href="Review-Reports.html">Review Reports</a></li>
+        <li><a href="System-Settings.html">System Settings</a></li>
+    </ul>
+</nav>
+
+<main>
+    <div class="header">
+        <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+        <div>
+            <p style="color:#666;font-size:0.9rem;">Exam ID: #8829-TECH</p>
+            <h1>Security Report: Kendrick Lamar</h1>
+        </div>
+        <button class="btn-view" style="background:#2ecc71;">Download PDF Report</button>
+    </div>
+
+    <div class="report-summary">
+        <div>
+            <h3 style="color:#e74c3c;">Integrity Risk: High</h3>
+            <p>Multiple suspicious behaviors were detected during the session.</p>
+            <p style="margin-top:10px;font-size:0.9rem;color:#666;">
+                Total Flags: <strong>14</strong> | Duration: <strong>1h 02m</strong>
+            </p>
+        </div>
+
+        <div class="score-circle">
+            <strong style="font-size:1.5rem;">42%</strong>
+            <span style="font-size:0.6rem;">Trust Score</span>
+        </div>
+    </div>
+
+    <h3>Flagged Incidents Timeline</h3>
+    <br>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Timestamp</th>
+                <th>Sensor</th>
+                <th>Description</th>
+                <th>Severity</th>
+                <th>Evidence</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>12:45:02 PM</td>
+                <td>👁️ Eye Gaze</td>
+                <td>Looked off-screen for 12 seconds</td>
+                <td><span class="status-pill pill-red">High</span></td>
+                <td><button class="btn-view action-btn" data-type="eye">View Clip</button></td>
+            </tr>
+
+            <tr>
+                <td>12:48:15 PM</td>
+                <td>✍️ Typing</td>
+                <td>400 characters pasted instantly</td>
+                <td><span class="status-pill pill-red">Critical</span></td>
+                <td><button class="btn-view action-btn" data-type="typing">View Text</button></td>
+            </tr>
+
+            <tr>
+                <td>01:02:30 PM</td>
+                <td>🎙️ Audio</td>
+                <td>Whisper detected</td>
+                <td><span class="status-pill pill-yellow">Medium</span></td>
+                <td><button class="btn-view action-btn" data-type="audio">Listen</button></td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+
+<div id="evidenceModal" class="modal">
+    <div class="modal-content">
+        <h2 id="modalTitle">Evidence Analysis</h2>
+        <p id="modalDesc" style="margin-top:10px; color:#555;"></p>
+        <div id="visualEvidence"></div>
+        <button class="close-btn" onclick="closeModal()">Close Analysis</button>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.querySelector('nav').classList.toggle('open');
+    }
+
+    const modal = document.getElementById('evidenceModal');
+    const title = document.getElementById('modalTitle');
+    const desc = document.getElementById('modalDesc');
+    const visual = document.getElementById('visualEvidence');
+
+    // Button Logic
+    document.querySelectorAll('.action-btn').forEach(btn => {
+        btn.onclick = function() {
+            const type = this.getAttribute('data-type');
+            showEvidence(type);
+        };
+    });
+
+    function showEvidence(type) {
+        modal.style.display = 'flex';
+        
+        if(type === 'eye') {
+            title.innerText = "👁️ Eye Tracking Analysis";
+            desc.innerText = "Heatmap confirms the candidate's focus drifted to an external device located at the bottom-right of the workstation.";
+            visual.innerHTML = `
+                <div style="background: url('https://via.placeholder.com/500x250/000/fff?text=EYE+GAZE+HEATMAP+OVERLAY'); background-size: cover; height: 200px; border-radius: 8px; position: relative;">
+                    <div style="position: absolute; right: 10px; bottom: 10px; width: 60px; height: 60px; background: rgba(231, 76, 60, 0.6); border-radius: 50%; box-shadow: 0 0 20px #e74c3c;"></div>
+                </div>
+            `;
+        } 
+        else if(type === 'typing') {
+            title.innerText = "✍️ Keystroke Injection Log";
+            desc.innerText = "The following string was inserted into the answer field in less than 2ms. No manual keystrokes detected.";
+            visual.innerHTML = `
+                <div style="text-align: left; background: #222; color: #2ecc71; padding: 15px; font-family: 'Courier New', monospace; font-size: 0.8rem; overflow-x: auto;">
+                    [SYS_CLIPBOARD]: "The fundamental theorem of calculus states that... [380 more characters]"<br>
+                    [V-LATENCY]: 0.0001s <br>
+                    [VERDICT]: AI_INJECTION_DETECTED
+                </div>
+            `;
+        } 
+        else if(type === 'audio') {
+            title.innerText = "🎙️ Acoustic Spectral Scan";
+            desc.innerText = "Isolating sub-vocal audio frequencies. Analysis matches the phonemes of the current test question.";
+            visual.innerHTML = `
+                <div style="background: #08203a; height: 120px; border-radius: 8px; display: flex; align-items: center; justify-content: space-around; padding: 0 20px;">
+                    <div style="width: 5px; height: 40px; background: #2ecc71;"></div>
+                    <div style="width: 5px; height: 80px; background: #2ecc71;"></div>
+                    <div style="width: 5px; height: 20px; background: #2ecc71;"></div>
+                    <div style="width: 5px; height: 90px; background: #e74c3c;"></div>
+                    <div style="width: 5px; height: 30px; background: #2ecc71;"></div>
+                    <div style="width: 5px; height: 60px; background: #2ecc71;"></div>
+                </div>
+                <p style="font-size: 0.7rem; color: #888; margin-top: 10px;">Frequency Spike Detected at 16.4kHz (Whisper)</p>
+            `;
+        }
+    }
+
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    // Close modal on outside click
+    window.onclick = function(event) {
+        if (event.target == modal) closeModal();
+    }
+</script>
+
+</body>
+</html>

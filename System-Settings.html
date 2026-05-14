@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sentinel-AI | System Settings</title>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            min-height: 100vh;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        /* ---------- SIDEBAR ---------- */
+        nav {
+            width: 260px;
+            background: #08203a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 50px;
+        }
+
+        .logo-sq {
+            width: 35px;
+            height: 35px;
+            background: #ffb400;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #08203a;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 8px;
+        }
+
+        .nav-links a {
+            display: block;
+            padding: 15px;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .nav-links .active a {
+            background: #ffb400;
+            color: #08203a;
+            font-weight: bold;
+        }
+
+        /* ---------- MAIN ---------- */
+        main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+
+        /* ---------- SETTINGS ---------- */
+        .setting-group {
+            margin-bottom: 20px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            margin: 10px 0;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            background: #08203a;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        /* ---------- TOGGLE ---------- */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 22px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-toggle {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider-toggle:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider-toggle {
+            background-color: #ffb400;
+        }
+
+        input:checked + .slider-toggle:before {
+            transform: translateX(22px);
+        }
+
+        /* ---------- FEED ---------- */
+        .activity-feed {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            grid-column: span 2;
+        }
+
+        .feed-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            background: #08203a;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <div class="logo-area">
+        <div class="logo-sq">S</div>
+        <span style="font-weight:bold; letter-spacing:1px;">SENTINEL-AI</span>
+    </div>
+
+    <ul class="nav-links">
+        <li><a href="index.html">Dashboard</a></li>
+        <li><a href="Live-Monitoring.html">Live Monitoring</a></li>
+        <li><a href="Review-Reports.html">Review Reports</a></li>
+        <li class="active"><a href="System-Settings.html">System Settings</a></li>
+    </ul>
+</nav>
+
+<main>
+    <div class="top-bar">
+        <h1>Configuration Center</h1>
+        <button onclick="save()">Apply Changes</button>
+    </div>
+
+    <div class="grid">
+
+        <div class="card">
+            <h3>🎚️ Sensor Sensitivity</h3>
+
+            <div class="setting-group">
+                <p>Eye Gaze Tolerance</p>
+                <input type="range" class="slider">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                    <span>Lenient</span><span>Strict</span>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <p>Typing Rhythm Variance</p>
+                <input type="range" class="slider">
+                <div style="display:flex; justify-content:space-between; font-size:0.8rem;">
+                    <span>Human</span><span>Bot-Check</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🛡️ Security Rules</h3>
+
+            <div class="setting-row">
+                <span>Auto-Lock on Tab Change</span>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-toggle"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <span>AI Language Detection</span>
+                <label class="switch">
+                    <input type="checkbox" checked>
+                    <span class="slider-toggle"></span>
+                </label>
+            </div>
+
+            <div class="setting-row">
+                <span>Clipboard Blocking</span>
+                <label class="switch">
+                    <input type="checkbox">
+                    <span class="slider-toggle"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="activity-feed" id="feed">
+            <div class="feed-item"><strong>Time</strong> <strong>Configuration Log</strong></div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    const feed = document.getElementById('feed');
+
+    function logEvent(msg) {
+        const time = new Date().toLocaleTimeString();
+        const item = document.createElement('div');
+        item.className = 'feed-item';
+        item.innerHTML = `${time} <span>${msg}</span>`;
+        feed.prepend(item);
+    }
+
+    function save() {
+        logEvent("System: Applying new configuration...");
+        setTimeout(() => logEvent("Success: Settings saved."), 800);
+    }
+
+    logEvent("Settings module loaded.");
+</script>
+
+</body>
+</html>

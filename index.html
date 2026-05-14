@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentinel-AI | Dashboard</title>
+
+<style>
+/* ---------- RESET & BASE ---------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary-blue: #08203a;
+  --accent-gold: #ffb400;
+  --sidebar-bg: #1a2a3a;
+  --bg-light: #f4f7f6;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-light);
+}
+
+/* ---------- SIDEBAR ---------- */
+nav {
+  width: 240px;
+  background: var(--sidebar-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 20px;
+  color: white;
+}
+
+/* Logo */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.logo-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--accent-gold);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--primary-blue);
+}
+
+.brand-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* Menu */
+.menu {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu li a {
+  display: block;
+  padding: 12px 15px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #ddd;
+  transition: 0.2s;
+}
+
+.menu li a:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--accent-gold);
+}
+
+.menu li.active a {
+  background: var(--accent-gold);
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  cursor: pointer;
+}
+
+.hamburger span {
+  width: 25px;
+  height: 3px;
+  background: white;
+}
+
+/* ---------- MAIN ---------- */
+main {
+  flex: 1;
+  padding: 40px;
+}
+
+.dashboard-header {
+  margin-bottom: 30px;
+}
+
+.hero-card {
+  background: white;
+  max-width: 900px;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  border-left: 6px solid var(--accent-gold);
+}
+
+.hero-card h2 {
+  color: var(--primary-blue);
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.hero-card p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+#getStarted {
+  background: var(--primary-blue);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-block;
+}
+
+#getStarted:hover {
+  background: #123356;
+}
+
+/* ---------- MOBILE ---------- */
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+  }
+
+  nav {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .menu {
+    display: none;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background: var(--sidebar-bg);
+    padding: 20px;
+  }
+
+  .hamburger {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<nav>
+  <div class="logo-container">
+    <div class="logo-icon">S</div>
+    <span class="brand-name">SENTINEL AI</span>
+  </div>
+
+  <div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <ul class="menu" id="menu">
+    <li class="active"><a href="index.html">Dashboard</a></li>
+    <li><a href="Live-Monitoring.html">Live Monitoring</a></li>
+    <li><a href="Review-Reports.html">Review Reports</a></li>
+    <li><a href="System-Settings.html">System Settings</a></li>
+  </ul>
+</nav>
+
+<main>
+  <div class="dashboard-header">
+    <h1>Welcome back, Admin</h1>
+  </div>
+
+  <div class="hero-card">
+    <h2>Live App Monitoring</h2>
+    <p>
+      Sentinel-AI provides high-integrity detection for schools and medical professionals.
+      Ensure authenticity in real-time during critical exams and interviews.
+    </p>
+    <a href="Live-Monitoring.html" id="getStarted">Launch Scanner</a>
+  </div>
+</main>
+
+<script>
+const hamburger = document.getElementById("hamburger");
+const menu = document.getElementById("menu");
+
+hamburger.addEventListener("click", () => {
+  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+});
+</script>
+
+</body>
+</html>
